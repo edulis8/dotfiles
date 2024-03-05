@@ -1,0 +1,57 @@
+# This is Git's per-user configuration file.
+[user]
+# Please adapt and uncomment the following lines:
+name = Eric Broberg
+email = eric.edulis@gmail.com
+
+
+[alias]
+# The command git add can be used to stage a file, 
+# but what about unstaging? Why isn’t there a command for that? Well… there is a command for that, and it looks as follows:
+  unstage = reset HEAD --
+  co = checkout
+  ci = commit
+  st = status
+  s = status
+  br = branch
+  hist = log --pretty=format:\"%h %ad | %s%d [%an]\" --graph --date=short
+  type = cat-file -t
+  dump = cat-file -p
+  wow = log --all --graph --decorate --oneline --simplify-by-decoration
+
+#  Let’s say you’ve added all the changes in your workspace to your index. Now git diff (or git d if you’re using the alias above) 
+# shows nothing. But there are changes there, and we want to see them!
+
+# These changes can be found via git diff --staged (synonym for git diff --cached), but who wants to type that out in full every time? Into the aliases 
+# they go, both of them:
+  dc = diff --cached
+  ds = diff --staged
+
+  undo = reset --soft HEAD^
+  redo = commit -a -c ORIG_HEAD
+
+
+
+# However, note that these commands run from the top-level of the repository, which may not be your current directory. 
+# However, Git proviles a useful environment variable, $GIT_PREFIX (which can also be obtained via git rev-parse --show-prefix) 
+# which shows the path to the current directory from the top of the repository, which you can use in your commands, e.g.,
+
+  ls = !ls -FC --color=auto ${GIT_PREFIX}
+# If you want to run several commands from that directory, you can cd into it first and then run your full command sequence:
+  # ls = !cd ${GIT_PREFIX} && command1 && command2
+
+
+    # pobr: (p)ush (o)rigin (br)anch
+  pobr = !git push --set-upstream origin "$(git rev-parse --abbrev-ref HEAD)"
+	
+
+#   Later, I learned that you can just make this behavior the default via a global config, so with just a single command:
+
+# $ git config --global push.default current
+
+
+
+  # puma: (p)ull (u)pstream (ma)in
+  # puma = !git checkout main && git pull --ff-only upstream main && git push
+    # poma: (p)ull (o)rigin (ma)in
+  # poma = !git checkout main && git pull --ff-only origin main
